@@ -1,0 +1,192 @@
+html, body{
+    height: 100%;
+}
+header{
+    background: #2f243a;
+    color : white;
+    display: flex;
+    align-content: center;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+}
+header h1{
+    margin: 30px;
+    margin-left: 0;
+}
+header a{
+    color: white;
+    margin: 30px;
+    cursor: pointer;
+
+}
+.container{
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    flex-direction: column;
+    padding: 1.5em;
+    
+    
+}
+#button{
+    background : #673AB7;
+    color: white;
+    border-radius: 25px;
+    border-style: none;
+    margin: 10px;
+    padding: 15px;
+    padding-right: 25px;
+    padding-left: 25px;
+}
+form{
+    margin-bottom: 25px;
+}
+.formCont{
+    margin-bottom: 1.5em;
+}
+
+input[type="radio"], 
+input[type="checkbox"] {
+    accent-color: #673AB7; /* Change to any color */
+}
+
+label {
+    width: 50px;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    margin-right: 20px;
+}
+input[type="text"], 
+select, 
+textarea {
+    width: 25%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+/* 
+input, select, textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+} */
+
+/* 
+input, textarea {
+    width: 50%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+} */
+
+/* Table styles */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table th, table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.delete-btn {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #e04343;
+}
+
+.no-tickets {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+
+/* Styles for popup */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow-y: auto; /* Allow scrolling if popup content exceeds viewport */
+}
+
+.popup-content {
+    position: relative;
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 70%;
+    max-width: 500px;
+    max-height: 80vh; /* Limit height to 80% of viewport height */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.popup-content label {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+}
+.popup-content input[type="text"],
+.popup-content input[type="email"],
+.popup-content input[type="tel"],
+.popup-content textarea {
+    width: 50vh;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.popup-content textarea {
+    height: 100px;
+    resize: vertical;
+}
+.popup-content button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.popup-content button[type="submit"]:hover {
+    background-color: #45a049;
+}
