@@ -16,6 +16,7 @@ document.getElementById("myFile").addEventListener("change", function () {
 document.addEventListener('DOMContentLoaded', function () {
     loadTicketsFromLocalStorage();
 
+    // Declaring constants
     const formPage = document.getElementById('formPage');
     const ticketListPage = document.getElementById('ticketListPage');
     const ticketListLink = document.getElementById('ticketListLink');
