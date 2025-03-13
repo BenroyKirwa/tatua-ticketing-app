@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 7</title>
+    <link rel="stylesheet" href="CSS/task-7.css">
+</head>
+
+<body>
+    <!-- Ticket Submission Form -->
+    <div id="formPage">
+        <header>
+            <img src="ticket48.png" alt="token">
+            <h1>Tatua</h1>
+            <a id="homeLink" style="color: burlywood;">Raise Ticket</a>
+            <a id="ticketListLink">Ticket List</a>
+        </header>
+        <div class="container">
+            <p>Have any inquiries? Fill this form we will get back to you as soon as possible</p>
+            <form id="ticketForm" action="">
+                <div class="formCont">
+                    <label for="fullname">Full name: </label>
+                    <input type="text" id="fullname" name="fullname"><br>
+                </div>
+                <div class="formCont">
+                    <label for="emailname">Email Address: </label>
+                    <input type="text" id="emailname" name="emailname"><br>
+                </div>
+                <div class="formCont">
+                    <label for="phonenumber">Phone Number: </label>
+                    <input type="text" id="phonenumber" name="phonenumber"><br>
+                </div>
+                <div class="formCont">
+                    <label for="subject">Subject: </label>
+                    <select name="subject" id="subject">
+                        <option value="default">Choose an option</option>
+                        <option value="slowMBA">Mobile App is Slow</option>
+                        <option value="slowWST">Web Site is Slow</option>
+                    </select><br>
+                </div>
+                <div class="formCont">
+                    <label for="message">Message: </label>
+                    <textarea id="message" name="message" rows="10" cols="30"></textarea><br>
+                </div>
+                <div class="formCont">
+                    <label for="preferedcontact">Prefered Contact</label>
+                    <input type="radio" id="email" name="preferedcontact" value="Email">
+                    <label for="email">Email</label>
+                    <input type="radio" id="phone" name="preferedcontact" value="Phone">
+                    <label for="phone">Phone</label><br>
+                </div>
+                <div class="formCont">
+                    <label for="file">Attachment: </label>
+                    <input type="file" id="myFile" name="filename" accept=".jpg, .png, .pdf"><br>
+                </div>
+                <div class="formCont">
+                    <input type="checkbox" id="termsandconditions" name="termsandconditions" value="termsandconditions">
+                    <label for="termsandconditions">I agree to the <a href="">Terms and Conditions</a></label><br>
+                </div>
+                <input type="submit" value="Submit" id="button">
+            </form>
+        </div>
+    </div>
+
+    <!-- Ticket List -->
+    <div id="ticketListPage" style="display: none;">
+        <header>
+            <img src="ticket48.png" alt="token">
+            <h1>Tatua</h1>
+            <a id="homeLink2">Raise Ticket</a>
+            <a id="ticketListLink2" style="color: burlywood;">Ticket List</a>
+        </header>
+        
+        <div class="container">
+            <h2>Submitted Tickets</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Raised by</th>
+                            <th>Ticket Details</th>
+                            <th>Date Created</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticketTableBody">
+                        <!-- Tickets will be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show Details -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" id="closePopup">&times;</span>
+            
+        </div>
+    </div>
+
+    <script src="JS/task-7-local.js"></script>
+</body>
+
+</html>
