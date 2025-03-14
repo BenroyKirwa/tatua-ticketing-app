@@ -2,7 +2,7 @@ html, body{
     height: 100%;
 }
 header{
-    background: #2f243a;
+    background: #2f243A;
     color : white;
     display: flex;
     align-content: center;
@@ -44,47 +44,37 @@ form{
     margin-bottom: 25px;
 }
 .formCont{
-    margin-bottom: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    margin-bottom: 20px;
 }
 
 input[type="radio"], 
 input[type="checkbox"] {
-    accent-color: #673AB7; /* Change to any color */
+    accent-color: #673AB7;
+}
+label {
+    display: inline-block;
+    width: 200px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
 }
 
-label {
-    width: 50px;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    margin-right: 20px;
+#termslabel{
+    width : 400px;
 }
-input[type="text"], 
-select, 
-textarea {
-    width: 25%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-}
-/* 
-input, select, textarea {
-    flex: 1;
+
+input[type="text"], select, textarea {
+    flex: .5;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
-} */
+    transition: border-color 0.3s;
+}
 
-/* 
-input, textarea {
-    width: 50%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-} */
 
 /* Table styles */
 .table-container {
@@ -105,20 +95,15 @@ table th, table td {
 
 table th {
     background-color: #f2f2f2;
+    color: #4F227D;
     font-weight: bold;
+    border-bottom: 2px solid #4F227D;
 }
 
-.delete-btn {
-    background-color: #ff4c4c;
-    color: white;
+.ticket-buttons button{
+    background-color: #f2f2f2;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.delete-btn:hover {
-    background-color: #e04343;
+    margin: 5px;
 }
 
 .no-tickets {
@@ -154,11 +139,10 @@ table th {
 }
 
 .close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
-    font-weight: bold;
+    margin-right: 15px;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
 }
 
@@ -189,4 +173,234 @@ table th {
 }
 .popup-content button[type="submit"]:hover {
     background-color: #45a049;
+}
+
+.sort-popup{
+    width: 100%;
+}
+.sort-popup-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center; /* Ensures vertical alignment */
+    background-color: #2F243A;
+    color: #DB8A74;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't mess with width */
+    
+}
+
+.sort-header-start{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sort-header-start img{
+    margin: 10px;
+}
+.sort-popup-header img.close {
+    margin: 0; /* Remove unnecessary margin */
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+.filter-popup{
+    width: 100%;
+}
+.filter-popup-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center; /* Ensures vertical alignment */
+    background-color: #2F243A;
+    color: #DB8A74;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't mess with width */
+    
+}
+
+.filter-header-start{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.filter-header-start img{
+    margin: 10px;
+}
+.filter-popup-header img.close {
+    margin: 0; /* Remove unnecessary margin */
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+/* to be changed*/
+.table-controls {
+    text-align: right;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.sort-btn {
+    background-color: #f4f4f4;
+    border:#f4f4f4;
+    color: #5856D6;
+    font-size: 1em;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+}
+
+.sort-btn.sorted {
+    background-color: #b22222; /* Red when sorted */
+    color: white;
+}
+
+.sort-label{
+    font-weight: bold;
+}
+
+.close-sort {
+    font-size: 18px; /* Larger X */
+    font-weight: bold;
+    cursor: pointer;
+    
+}
+
+.sort-criterion-list {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.sort-column, .sort-order, .delete-sort {
+    padding: 5px;
+}
+
+#deleteBtn{
+    align-self: flex-end;
+}
+
+.filter-btn, .refresh-btn {
+    font-size: 1em;
+    background-color: #f4f4f4;
+    border:#f4f4f4;
+    color: #5856D6;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+}
+
+
+.filter-btn.filtered {
+    background-color: #b22222;
+    color: white;
+    padding-right: 25px;
+}
+
+.filter-criterion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.filter-criterion {
+    flex: none;
+}
+
+.filter-column, .filter-relation, .filter-value {
+    padding: 5px;
+}
+
+.filter-value {
+    flex: 1; /* Take remaining space */
+}
+
+.delete-filter {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+.close-filter {
+    font-size: 18px; /* Larger X */
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.filter-label{
+    font-weight: bold;
+}
+
+.filter-popup-footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 10px;
+}
+
+#resetBtn{
+    color: red;
+    background-color: white;
+    border: none;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#submitBtn{
+    background-color: #4F227D;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #666;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #444;
+}
+
+.pagination span {
+    font-weight: bold;
 }
