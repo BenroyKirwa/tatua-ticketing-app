@@ -22,19 +22,19 @@
             <form id="ticketForm" action="">
                 <div class="formCont">
                     <label for="fullname">Full name: </label>
-                    <input type="text" id="fullname" name="fullname"><br>
+                    <input type="text" id="fullname" name="fullname" required><br>
                 </div>
                 <div class="formCont">
                     <label for="emailname">Email Address: </label>
-                    <input type="text" id="emailname" name="emailname"><br>
+                    <input type="text" id="emailname" name="emailname" required><br>
                 </div>
                 <div class="formCont">
                     <label for="phonenumber">Phone Number: </label>
-                    <input type="text" id="phonenumber" name="phonenumber"><br>
+                    <input type="text" id="phonenumber" name="phonenumber" required><br>
                 </div>
                 <div class="formCont">
                     <label for="subject">Subject: </label>
-                    <select name="subject" id="subject">
+                    <select name="subject" id="subject" required>
                         <option value="default">Choose an option</option>
                         <option value="slowMBA">Mobile App is Slow</option>
                         <option value="slowWST">Web Site is Slow</option>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="formCont">
                     <label for="message">Message: </label>
-                    <textarea id="message" name="message" rows="10" cols="30"></textarea><br>
+                    <textarea id="message" name="message" rows="10" cols="30" required></textarea><br>
                 </div>
                 <div class="formCont">
                     <label for="preferedcontact">Prefered Contact</label>
@@ -56,8 +56,8 @@
                     <input type="file" id="myFile" name="filename" accept=".jpg, .png, .pdf"><br>
                 </div>
                 <div class="formCont">
-                    <input type="checkbox" id="termsandconditions" name="termsandconditions" value="termsandconditions">
-                    <label for="termsandconditions">I agree to the <a href="">Terms and Conditions</a></label><br>
+                    <input type="checkbox" id="termsandconditions" name="termsandconditions" value="termsandconditions" required>
+                    <label id="termslabel" for="termsandconditions">I agree to the <a href="">Terms and Conditions</a></label><br>
                 </div>
                 <input type="submit" value="Submit" id="button">
             </form>
@@ -74,12 +74,24 @@
         </header>
         
         <div class="container">
-            <h2>Submitted Tickets</h2>
+            <div class="table-controls">
+                <button id="sortBtn" class="sort-btn">
+                    <span class="sort-image" style="display: inline;"><img alt="image" src="sort.svg" height="15" width="15"></span>
+                    <span class="sort-label"><b>Sort</b></span>
+                    <span class="close-sort" style="display: none;">×</span>
+                </button>
+                <button id="filterBtn" class="filter-btn">
+                    <span class="filter-image" style="display: inline;"><img alt="image" src="filter.svg" height="15" width="15"></span>
+                    <span class="filter-label"><b>Filter</b></span>
+                    <span class="close-filter" style="display: none;">×</span>
+                </button>
+                <button class="refresh-btn"><b>↻ Refresh</b></button>
+            </div>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>Ticket ID</th>
                             <th>Raised by</th>
                             <th>Ticket Details</th>
                             <th>Date Created</th>
