@@ -12,10 +12,10 @@
     <!-- Ticket Submission Form -->
     <div id="formPage">
         <header>
-            <img src="ticket48.png" alt="token">
+            <img src="ticket48.png" alt="token" style="margin-left: 20px;">
             <h1>Tatua</h1>
-            <a id="homeLink" style="color: burlywood;">Raise Ticket</a>
-            <a id="ticketListLink">Ticket List</a>
+            <a id="homeLink" style="color: #DB8A74"><u>Raise Ticket</u></a>
+            <a id="ticketListLink"><u>Ticket List</u></a>
         </header>
         <div class="container">
             <p>Have any inquiries? Fill this form we will get back to you as soon as possible</p>
@@ -56,10 +56,12 @@
                     <input type="file" id="myFile" name="filename" accept=".jpg, .png, .pdf"><br>
                 </div>
                 <div class="formCont">
-                    <input type="checkbox" id="termsandconditions" name="termsandconditions" value="termsandconditions" required>
-                    <label id="termslabel" for="termsandconditions">I agree to the <a href="">Terms and Conditions</a></label><br>
+                    <input type="checkbox" id="termsandconditions" name="termsandconditions" value="termsandconditions"
+                        required>
+                    <label id="termslabel" for="termsandconditions">I agree to the <a href="">Terms and
+                            Conditions</a></label><br>
                 </div>
-                <input type="submit" value="Submit" id="button">
+                <input class="submit" type="submit" value="Submit" id="button">
             </form>
         </div>
     </div>
@@ -67,21 +69,23 @@
     <!-- Ticket List -->
     <div id="ticketListPage" style="display: none;">
         <header>
-            <img src="ticket48.png" alt="token">
+            <img src="ticket48.png" alt="token" style="margin-left: 20px;">
             <h1>Tatua</h1>
-            <a id="homeLink2">Raise Ticket</a>
-            <a id="ticketListLink2" style="color: burlywood;">Ticket List</a>
+            <a id="homeLink2"><u>Raise Ticket</u></a>
+            <a id="ticketListLink2" style="color: #DB8A74;"><u>Ticket List</u></a>
         </header>
-        
+
         <div class="container">
             <div class="table-controls">
                 <button id="sortBtn" class="sort-btn">
-                    <span class="sort-image" style="display: inline;"><img alt="image" src="sort.svg" height="15" width="15"></span>
+                    <span class="sort-image" style="display: inline;"><img alt="image" src="sort.svg" height="15"
+                            width="15"></span>
                     <span class="sort-label"><b>Sort</b></span>
                     <span class="close-sort" style="display: none;">×</span>
                 </button>
                 <button id="filterBtn" class="filter-btn">
-                    <span class="filter-image" style="display: inline;"><img alt="image" src="filter.svg" height="15" width="15"></span>
+                    <span class="filter-image" style="display: inline;"><img alt="image" src="filter.svg" height="15"
+                            width="15"></span>
                     <span class="filter-label"><b>Filter</b></span>
                     <span class="close-filter" style="display: none;">×</span>
                 </button>
@@ -110,9 +114,15 @@
     <div id="popup" class="popup">
         <div class="popup-content">
             <span class="close" id="closePopup">&times;</span>
-            
+
         </div>
     </div>
+
+    <!-- Success popup -->
+    <div id="successPopup" class="success-popup">
+        <p id="successMessage">Ticket submitted successfully!</p>
+    </div>
+    
 
     <script src="JS/task-7-local.js"></script>
 </body>
