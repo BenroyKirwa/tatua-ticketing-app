@@ -7,6 +7,7 @@ let originalTickets = [];
 let displayedTickets = [];
 let currentPage = 1;
 const ticketsPerPage = 5;
+let encryptionKey = null;
 
 document.getElementById("myFile").addEventListener("change", function () {
     const allowedExtensions = ["jpg", "png", "pdf"];
@@ -20,8 +21,11 @@ document.getElementById("myFile").addEventListener("change", function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    loadTicketsFromLocalStorage();
+
+
+
+document.addEventListener('DOMContentLoaded', async function () {
+    await loadTicketsFromLocalStorage();
     originalTickets = [...tickets]; // Backup original order
     displayedTickets = [...tickets]; // Initialize displayed tickets
 
@@ -33,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         displayedTickets = [...tickets]; // Reset displayed tickets
         displayTickets(); // Refresh the table
     });
+
 
     // Add event listener to sort button
     const sortBtn = document.getElementById('sortBtn');
@@ -99,13 +104,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const form = document.getElementById('ticketForm');
     if (form) {
-        form.addEventListener('submit', function (event) {
+        form.addEventListener('submit', async function (event) {
             event.preventDefault();
             if (validateForm()) {
                 const fileInput = document.getElementById('myFile');
                 const file = fileInput.files.length > 0 ? fileInput.files[0] : null;
 
-                // Create ticket object and handle file as base64
                 const ticket = {
                     id: generateId(),
                     fullName: document.getElementById('fullname').value,
@@ -115,37 +119,105 @@ document.addEventListener('DOMContentLoaded', function () {
                     message: document.getElementById('message').value,
                     preferredContact: document.querySelector('input[name="preferedcontact"]:checked').value,
                     attachment: file ? file.name : 'No attachment',
-                    attachmentData: null, // Will store base64 string
+                    attachmentData: null,
                     date: new Date().toLocaleDateString()
                 };
 
-                // Convert file to base64 if present
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function (e) {
-                        ticket.attachmentData = e.target.result; // Base64 string
+                    reader.onload = async function (e) {
+                        ticket.attachmentData = e.target.result;
                         tickets.push(ticket);
-                        saveTicketsToLocalStorage();
-                        alert('Ticket submitted successfully!');
+                        await saveTicketsToLocalStorage();
+                        originalTickets = [...tickets];
+                        displayedTickets = [...tickets];
+                        showSuccessPopup("Ticket submitted successfully!");
                         form.reset();
                         showPage('list');
+                        setTimeout(() => {
+                            displayTickets();
+                        }, 100);
                     };
                     reader.readAsDataURL(file);
                 } else {
                     tickets.push(ticket);
-                    saveTicketsToLocalStorage();
-                    alert('Ticket submitted successfully!');
+                    await saveTicketsToLocalStorage();
+                    originalTickets = [...tickets];
+                    displayedTickets = [...tickets];
+                    showSuccessPopup("Ticket submitted successfully!");
                     form.reset();
                     showPage('list');
+                    setTimeout(() => {
+                        displayTickets();
+                    }, 100);
                 }
             }
         });
     }
+
     showPage('form');
 });
 
 function generateId() {
     return Date.now().toString();
+}
+
+// Fetch and parse the key from the XML file
+async function fetchEncryptionKey() {
+    try {
+        const response = await fetch('/key.xml'); // Adjust path if needed (e.g., '/data/key.xml')
+        if (!response.ok) throw new Error('Failed to fetch key.xml');
+        const xmlText = await response.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+        const keyBase64 = xmlDoc.querySelector('encryptionKey')?.textContent;
+        if (!keyBase64) throw new Error('Encryption key not found in XML');
+
+        // Convert base64 key to binary and import it
+        const keyData = Uint8Array.from(atob(keyBase64), c => c.charCodeAt(0));
+        encryptionKey = await window.crypto.subtle.importKey(
+            "raw",
+            keyData,
+            { name: "AES-GCM" },
+            false,
+            ["encrypt", "decrypt"]
+        );
+        console.log('Encryption key loaded successfully');
+    } catch (error) {
+        console.error('Error loading encryption key:', error);
+        throw error; // Let the caller handle the error
+    }
+}
+
+function getMessageEncoding(data) {
+    const enc = new TextEncoder();
+    return enc.encode(JSON.stringify(data));
+}
+
+async function encryptMessage(data) {
+    const encoded = getMessageEncoding(data);
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const encrypted = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        encryptionKey,
+        encoded
+    );
+    return {
+        iv: btoa(String.fromCharCode(...iv)),
+        encrypted: btoa(String.fromCharCode(...new Uint8Array(encrypted)))
+    };
+}
+
+async function decryptMessage(encryptedData, ivBase64) {
+    const iv = Uint8Array.from(atob(ivBase64), c => c.charCodeAt(0));
+    const encrypted = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
+    const decrypted = await window.crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: iv },
+        encryptionKey,
+        encrypted
+    );
+    const dec = new TextDecoder();
+    return JSON.parse(dec.decode(decrypted));
 }
 
 function validateForm() {
@@ -232,27 +304,31 @@ window.editTicket = function (index) {
 
 
     content.innerHTML = `
-        <span class="close" id="closePopup">×</span>
-        <h2>Edit Ticket</h2>
-        <form id="editTicketForm">
-            <p><strong>Ticket ID:</strong> ${entry.id}</p>
-            <label>Full Name: <input type="text" id="editFullname" value="${entry.fullName}"></label><br>
-            <label>Email: <input type="email" id="editEmailname" value="${entry.email}"></label><br>
-            <label>Phone: <input type="tel" id="editPhonenumber" value="${entry.phone}"></label><br>
-            <label>Subject: 
-                <select id="editSubject">
-                    <option value="Technical Issue" ${entry.subject === 'slowMBA' ? 'selected' : ''}>Mobile App is Slow</option>
-                    <option value="Billing" ${entry.subject === 'slowWST' ? 'selected' : ''}>Web Site is Slow</option>
-                </select>
-            </label><br>
-            <label>Message: <textarea id="editMessage">${entry.message}</textarea></label><br>
-            <label>Preferred Contact: 
-                <input type="radio" name="editPreferedcontact" value="email" ${entry.preferredContact === 'email' ? 'checked' : ''}> Email
-                <input type="radio" name="editPreferedcontact" value="phone" ${entry.preferredContact === 'phone' ? 'checked' : ''}> Phone
-            </label><br>
-            <label>Attachment: <span>${entry.attachment}</span> <input type="file" id="editFile" accept=".jpg,.png,.pdf"></label><br>
-            <button type="submit">Save Changes</button>
-        </form>
+        <div class="edit-header">
+            <h2>Edit Ticket</h2>
+            <img class="close" id="closePopup" src="cancel.svg" alt="image" width="20" height="20">
+        </div>
+        <div class="edit-body">
+            <form id="editTicketForm">
+                <p><strong>Ticket ID:</strong> ${entry.id}</p>
+                <label>Full Name: <input type="text" id="editFullname" value="${entry.fullName}"></label><br>
+                <label>Email: <input type="email" id="editEmailname" value="${entry.email}"></label><br>
+                <label>Phone: <input type="tel" id="editPhonenumber" value="${entry.phone}"></label><br>
+                <label>Subject: 
+                    <select id="editSubject">
+                        <option value="Technical Issue" ${entry.subject === 'slowMBA' ? 'selected' : ''}>Mobile App is Slow</option>
+                        <option value="Billing" ${entry.subject === 'slowWST' ? 'selected' : ''}>Web Site is Slow</option>
+                    </select>
+                </label><br>
+                <label>Message: <textarea id="editMessage">${entry.message}</textarea></label><br>
+                <label>Preferred Contact: 
+                    <input type="radio" name="editPreferedcontact" value="email" ${entry.preferredContact === 'email' ? 'checked' : ''}> Email
+                    <input type="radio" name="editPreferedcontact" value="phone" ${entry.preferredContact === 'phone' ? 'checked' : ''}> Phone
+                </label><br>
+                <label>Attachment: <span>${entry.attachment}</span> <input type="file" id="editFile" accept=".jpg,.png,.pdf"></label><br>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
     `;
     document.getElementById("popup").style.display = "block";
 
@@ -336,24 +412,30 @@ window.showInfo = function (index) {
     }
 
     content.innerHTML = `
-        <span class="close" id="closePopup">×</span>
-        <h2>Ticket Details</h2>
-        <p><strong>Ticket ID:</strong> ${entry.id}</p>
-        <p><strong>Name:</strong> ${entry.fullName}</p>
-        <p><strong>Email:</strong> ${entry.email}</p>
-        <p><strong>Phone:</strong> ${entry.phone}</p>
-        <p><strong>Subject:</strong> ${entry.subject}</p>
-        <p><strong>Message:</strong> ${entry.message}</p>
-        <p><strong>Preferred Contact:</strong> ${entry.preferredContact}</p>
-        <p><strong>Attachment:</strong> ${entry.attachment}</p>
-        <div><strong>Preview:</strong><br>${previewHTML}</div>
-        <p><strong>Date:</strong> ${entry.date}</p>
+        <div class="info-header">
+            <h2>Ticket Details</h2>
+            <img class="close" id="closePopup" src="cancel.svg" alt="image" width="20" height="20">
+        </div>
+        <div class="info-body">
+            <p><strong>Ticket ID:</strong> ${entry.id}</p>
+            <p><strong>Name:</strong> ${entry.fullName}</p>
+            <p><strong>Email:</strong> ${entry.email}</p>
+            <p><strong>Phone:</strong> ${entry.phone}</p>
+            <p><strong>Subject:</strong> ${entry.subject}</p>
+            <p><strong>Message:</strong> ${entry.message}</p>
+            <p><strong>Preferred Contact:</strong> ${entry.preferredContact}</p>
+            <p><strong>Attachment:</strong> ${entry.attachment}</p>
+            <div><strong>Preview:</strong><br>${previewHTML}</div>
+            <p><strong>Date:</strong> ${entry.date}</p>
+        </div>
     `;
     document.getElementById("popup").style.display = "block";
     document.getElementById("closePopup").addEventListener("click", () => {
         document.getElementById("popup").style.display = "none";
     });
 };
+
+
 
 window.addEventListener("click", function (event) {
     const popup = document.getElementById("popup");
@@ -376,16 +458,60 @@ function deleteTicket(id) {
     displayTickets();
 }
 
-function saveTicketsToLocalStorage() {
-    localStorage.setItem('tickets', JSON.stringify(tickets)); // Save original tickets
+function showSuccessPopup(message) {
+    const popup = document.getElementById("successPopup"); // Get the popup div
+    const popupMessage = document.getElementById("successMessage"); // Get message span
+    popupMessage.innerText = message; // Set message text
+    popup.style.display = "block"; // Show popup
+
+    // Auto-hide popup after 3 seconds
+    setTimeout(() => {
+        popup.style.display = "none";
+    }, 3000);
 }
 
-function loadTicketsFromLocalStorage() {
+
+async function saveTicketsToLocalStorage() {
+    if (!encryptionKey) await fetchEncryptionKey();
+    try {
+        const encryptedData = await encryptMessage(tickets);
+        localStorage.setItem('tickets', JSON.stringify({
+            iv: encryptedData.iv,
+            data: encryptedData.encrypted
+        }));
+    } catch (error) {
+        console.error('Encryption failed:', error);
+    }
+}
+
+async function loadTicketsFromLocalStorage() {
+    if (!encryptionKey) {
+        try {
+            await fetchEncryptionKey();
+        } catch (error) {
+            tickets = [];
+            originalTickets = [];
+            displayedTickets = [];
+            return;
+        }
+    }
     const storedTickets = localStorage.getItem('tickets');
     if (storedTickets) {
-        tickets = JSON.parse(storedTickets);
-        originalTickets = [...tickets];
-        displayedTickets = [...tickets];
+        const { iv, data } = JSON.parse(storedTickets);
+        try {
+            tickets = await decryptMessage(data, iv);
+            originalTickets = [...tickets];
+            displayedTickets = [...tickets];
+        } catch (error) {
+            console.error('Decryption failed:', error);
+            tickets = [];
+            originalTickets = [];
+            displayedTickets = [];
+        }
+    } else {
+        tickets = [];
+        originalTickets = [];
+        displayedTickets = [];
     }
 }
 
@@ -401,9 +527,11 @@ window.showSortPopup = function () {
                 </div>
                 <img class="close" id="closePopup" src="cancel.svg" alt="image" width="20" height="20">
             </div>
-            <div id="sortCriteriaList"></div>
-            <button onclick="addSortCriteria()">Add Sort</button>
-            <div class="filter-popup-footer">
+            <div class="sort-body">
+                <div id="sortCriteriaList"></div>
+                <button onclick="addSortCriteria()">Add Sort</button>
+            </div>
+            <div class="sort-popup-footer">
                 <button id="resetBtn" onclick="resetSort()">Reset Sorting</button>
                 <button id="submitBtn" onclick="applySort(); document.getElementById('popup').style.display = 'none';">Submit</button>
             </div>
@@ -557,8 +685,10 @@ window.showFilterPopup = function () {
                 </div>
                 <img class="close" id="closePopup" src="cancel.svg" alt="image" width="20" height="20">
             </div>
-            <div id="filterCriteriaList"></div>
-            <button onclick="addFilterCriteria()">Add Filter</button>
+            <div class="filter-popup-body">
+                <div id="filterCriteriaList"></div>
+                <button onclick="addFilterCriteria()">Add Filter</button>
+            </div>
             <div class="filter-popup-footer">
                 <button id="resetBtn" onclick="resetFilter()">Reset Filter</button>
                 <button id="submitBtn" onclick="applyFilter(); document.getElementById('popup').style.display = 'none';">Submit</button>
