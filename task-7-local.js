@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     phone: document.getElementById('phonenumber').value,
                     subject: document.getElementById('subject').value,
                     message: document.getElementById('message').value,
-                    preferredContact: document.querySelector('input[name="preferedcontact"]:checked').value,
+                    preferredContact: document.querySelector('input[name="preferedcontact"]:checked')?.value || 'Email',
                     attachment: file ? file.name : 'No attachment',
                     attachmentData: null,
                     date: new Date().toLocaleDateString()
@@ -260,7 +260,7 @@ function displayTickets() {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${startIndex + index + 1}</td>
-            <td><strong>${ticket.fullName}</strong><br><small>${ticket.email || ticket.phone}</small></td>
+            <td><strong>${ticket.fullName}</strong><br><small>${ticket.preferredContact === 'Phone' ? ticket.phone : ticket.email}</small></td>
             <td><strong>${ticket.subject}</strong><br><small>${ticket.message.substring(0, 50)}${ticket.message.length > 50 ? '...' : ''}</small></td>
             <td>${ticket.date}</td>
             <td class="ticket-buttons">
